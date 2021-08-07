@@ -8,3 +8,5 @@ edition = "2018"
 [dependencies]
 chrono = "0.4.19"
 dotenv = "0.15.0"
+fern = "0.6.0"
+log = "0.4.14"
