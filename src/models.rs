@@ -1,4 +1,5 @@
 // for GET requests
+use crate::schema::*;
 
 #[derive(serde::Serialize)]
 #[serde(rename_all = "camelCase")]
