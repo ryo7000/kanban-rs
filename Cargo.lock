@@ -54,6 +54,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "diesel-derive-enum"
+version = "1.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "70806b70be328e646f243680a3fc93b3cfdd6db373faa5110660a5dd5af243bc"
+dependencies = [
+ "heck",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "diesel_derives"
 version = "1.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -80,6 +92,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "heck"
+version = "0.3.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6d621efb26863f0e9924c6ac577e8275e5e6b77455db64ffa6c65c904e9e132c"
+dependencies = [
+ "unicode-segmentation",
+]
+
+[[package]]
 name = "itoa"
 version = "0.4.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -91,6 +112,7 @@ version = "0.1.0"
 dependencies = [
  "chrono",
  "diesel",
+ "diesel-derive-enum",
  "dotenv",
  "fern",
  "log",
@@ -217,6 +239,12 @@ dependencies = [
  "wasi",
  "winapi",
 ]
+
+[[package]]
+name = "unicode-segmentation"
+version = "1.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8895849a949e7845e06bd6dc1aa51731a103c42707010a5b591c0038fb73385b"
 
 [[package]]
 name = "unicode-xid"

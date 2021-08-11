@@ -19,8 +19,9 @@ pub struct Card {
     pub created_at: chrono::DateTime<chrono::Utc>,
 }
 
-#[derive(serde::Serialize, serde::Deserialize)]
+#[derive(serde::Serialize, serde::Deserialize, diesel_derive_enum::DbEnum, Debug)]
 #[serde(rename_all = "camelCase")]
+#[DieselType = "Status_enum"]
 pub enum Status {
     Todo,
     Doing,
