@@ -1,3 +1,4 @@
+mod db;
 mod logger;
 mod models;
 

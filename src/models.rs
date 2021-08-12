@@ -18,15 +18,16 @@ pub struct Card {
     pub created_at: chrono::DateTime<chrono::Utc>,
 }
 
-#[derive(serde::Serialize, serde::Deserialize)]
+#[derive(serde::Serialize, serde::Deserialize, sqlx::Type)]
 #[serde(rename_all = "camelCase")]
+#[sqlx(rename_all = "camelCase")]
 pub enum Status {
     Todo,
     Doing,
     Done,
 }
 
-#[derive(serde::Serialize)]
+#[derive(Default, serde::Serialize)]
 pub struct BoardSummary {
     pub todo: i64,
     pub doing: i64,
