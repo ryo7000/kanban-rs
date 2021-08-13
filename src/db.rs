@@ -2,6 +2,7 @@ use crate::models::*;
 use crate::StdErr;
 use sqlx::{postgres::PgPoolOptions, Connection, PgConnection, Pool, Postgres};
 
+#[derive(Clone)]
 pub struct Db {
     pool: Pool<Postgres>,
 }

@@ -14,9 +14,11 @@ async fn main() -> Result<(), StdErr> {
     dotenv::dotenv()?;
     logger::init()?;
 
+    let db = db::Db::connect().await?;
+
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
     axum::Server::bind(&addr)
-        .serve(routes::root().into_make_service())
+        .serve(routes::root(db).into_make_service())
         .await?;
 
     Ok(())
