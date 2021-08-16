@@ -13,7 +13,7 @@ type StdErr = Box<dyn std::error::Error>;
 async fn main() -> Result<(), StdErr> {
     // loads env variables from .env
     dotenv::dotenv()?;
-    logger::init()?;
+    let _guard = logger::init()?;
 
     let db = db::Db::connect().await?;
 

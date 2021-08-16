@@ -3,7 +3,7 @@ use log::{debug, error, info, trace, warn};
 use std::env;
 use tracing_subscriber::prelude::*;
 
-pub fn init() -> Result<(), StdErr> {
+pub fn init() -> Result<Option<tracing_appender::non_blocking::WorkerGuard>, StdErr> {
     // pull log level from env
     let log_level = env::var("LOG_LEVEL").unwrap_or("INFO".into());
     let log_level = log_level
@@ -18,17 +18,18 @@ pub fn init() -> Result<(), StdErr> {
         .with(stdout_layer);
 
     // also log to file if one is provided via env
-    if let Ok(log_file) = env::var("LOG_FILE") {
-        // TODO: check file
+    let guard = if let Ok(log_file) = env::var("LOG_FILE") {
         let file_appender = tracing_appender::rolling::hourly("./log", log_file);
-        let (non_blocking, _guard) = tracing_appender::non_blocking(file_appender);
+        let (non_blocking, guard) = tracing_appender::non_blocking(file_appender);
 
         builder
             .with(tracing_subscriber::fmt::layer().with_writer(non_blocking))
             .init();
+        Some(guard)
     } else {
         builder.init();
-    }
+        None
+    };
 
     trace!("TRACE output enabled");
     debug!("DEBUG output enabled");
@@ -36,5 +37,5 @@ pub fn init() -> Result<(), StdErr> {
     warn!("WARN output enabled");
     error!("ERROR output enabled");
 
-    Ok(())
+    Ok(guard)
 }
