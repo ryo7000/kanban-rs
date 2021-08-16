@@ -5,7 +5,7 @@ use tracing_subscriber::prelude::*;
 
 pub fn init() -> Result<Option<tracing_appender::non_blocking::WorkerGuard>, StdErr> {
     // pull log level from env
-    let log_level = env::var("LOG_LEVEL").unwrap_or("INFO".into());
+    let log_level = env::var("LOG_LEVEL").unwrap_or_else(|_| "INFO".into());
     let log_level = log_level
         .parse::<tracing::Level>()
         .unwrap_or(tracing::Level::INFO);
