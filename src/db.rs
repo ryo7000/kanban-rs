@@ -1,5 +1,5 @@
 use crate::models::*;
-use crate::StdErr;
+use anyhow::Result;
 use sqlx::{postgres::PgPoolOptions, Pool, Postgres};
 
 #[derive(Clone)]
@@ -27,20 +27,20 @@ impl From<Vec<Row>> for BoardSummary {
 }
 
 impl Db {
-    pub async fn connect() -> Result<Self, StdErr> {
+    pub async fn connect() -> Result<Self> {
         let db_url = std::env::var("DATABASE_URL")?;
         let pool = PgPoolOptions::new().connect(&db_url).await?;
         Ok(Db { pool })
     }
 
-    pub async fn boards(&self) -> Result<Vec<Board>, StdErr> {
+    pub async fn boards(&self) -> Result<Vec<Board>> {
         let boards = sqlx::query_as!(Board, "SELECT * FROM boards")
             .fetch_all(&self.pool)
             .await?;
         Ok(boards)
     }
 
-    pub async fn board_summary(&self, board_id: i64) -> Result<BoardSummary, StdErr> {
+    pub async fn board_summary(&self, board_id: i64) -> Result<BoardSummary> {
         let counts = sqlx::query_as!(
             Row,
             r#"
@@ -54,7 +54,7 @@ impl Db {
         Ok(counts.into())
     }
 
-    pub async fn create_board(&self, create_board: CreateBoard) -> Result<Board, StdErr> {
+    pub async fn create_board(&self, create_board: CreateBoard) -> Result<Board> {
         let board = sqlx::query_as!(
             Board,
             "INSERT INTO boards (name) VALUES ($1) RETURNING *",
@@ -65,14 +65,14 @@ impl Db {
         Ok(board)
     }
 
-    pub async fn delete_board(&self, board_id: i64) -> Result<(), StdErr> {
+    pub async fn delete_board(&self, board_id: i64) -> Result<()> {
         sqlx::query!("DELETE FROM boards WHERE id = $1", board_id)
             .execute(&self.pool)
             .await?;
         Ok(())
     }
 
-    pub async fn cards(&self, board_id: i64) -> Result<Vec<Card>, StdErr> {
+    pub async fn cards(&self, board_id: i64) -> Result<Vec<Card>> {
         let cards = sqlx::query_as!(
             Card,
             r#"
@@ -87,7 +87,7 @@ impl Db {
         Ok(cards)
     }
 
-    pub async fn create_card(&self, create_card: CreateCard) -> Result<Card, StdErr> {
+    pub async fn create_card(&self, create_card: CreateCard) -> Result<Card> {
         let card = sqlx::query_as!(
             Card,
             r#"
@@ -103,7 +103,7 @@ impl Db {
         Ok(card)
     }
 
-    pub async fn update_card(&self, card_id: i64, update_card: UpdateCard) -> Result<Card, StdErr> {
+    pub async fn update_card(&self, card_id: i64, update_card: UpdateCard) -> Result<Card> {
         let card = sqlx::query_as!(
             Card,
             r#"
@@ -120,7 +120,7 @@ impl Db {
         Ok(card)
     }
 
-    pub async fn delete_card(&self, card_id: i64) -> Result<(), StdErr> {
+    pub async fn delete_card(&self, card_id: i64) -> Result<()> {
         sqlx::query!("DELETE FROM cards WHERE id = $1", card_id)
             .execute(&self.pool)
             .await?;

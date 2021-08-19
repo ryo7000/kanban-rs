@@ -1,3 +1,4 @@
+use anyhow::Result;
 use axum::prelude::*;
 use std::net::SocketAddr;
 
@@ -6,10 +7,8 @@ mod logger;
 mod models;
 mod routes;
 
-type StdErr = Box<dyn std::error::Error>;
-
 #[tokio::main]
-async fn main() -> Result<(), StdErr> {
+async fn main() -> Result<()> {
     // loads env variables from .env
     dotenv::dotenv()?;
     let _guard = logger::init()?;

@@ -1,4 +1,4 @@
-use crate::StdErr;
+use anyhow::Result;
 use log::{debug, error, info, trace, warn};
 use std::env;
 use tower_http::classify::{ServerErrorsAsFailures, SharedClassifier};
@@ -6,7 +6,7 @@ use tower_http::trace::{DefaultOnRequest, DefaultOnResponse, TraceLayer};
 use tracing::Level;
 use tracing_subscriber::prelude::*;
 
-pub fn init() -> Result<Option<tracing_appender::non_blocking::WorkerGuard>, StdErr> {
+pub fn init() -> Result<Option<tracing_appender::non_blocking::WorkerGuard>> {
     // pull log level from env
     let log_level = env::var("LOG_LEVEL").unwrap_or_else(|_| "INFO".into());
     let log_level = log_level
