@@ -1,6 +1,9 @@
 use crate::StdErr;
 use log::{debug, error, info, trace, warn};
 use std::env;
+use tower_http::classify::{ServerErrorsAsFailures, SharedClassifier};
+use tower_http::trace::{DefaultOnRequest, DefaultOnResponse, TraceLayer};
+use tracing::Level;
 use tracing_subscriber::prelude::*;
 
 pub fn init() -> Result<Option<tracing_appender::non_blocking::WorkerGuard>, StdErr> {
@@ -38,4 +41,10 @@ pub fn init() -> Result<Option<tracing_appender::non_blocking::WorkerGuard>, Std
     error!("ERROR output enabled");
 
     Ok(guard)
+}
+
+pub fn create_trace_layer() -> TraceLayer<SharedClassifier<ServerErrorsAsFailures>> {
+    TraceLayer::new_for_http()
+        .on_request(DefaultOnRequest::new().level(Level::INFO))
+        .on_response(DefaultOnResponse::new().level(Level::INFO))
 }

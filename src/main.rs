@@ -1,6 +1,5 @@
 use axum::prelude::*;
 use std::net::SocketAddr;
-use tower_http::trace::TraceLayer;
 
 mod db;
 mod logger;
@@ -21,7 +20,7 @@ async fn main() -> Result<(), StdErr> {
     axum::Server::bind(&addr)
         .serve(
             routes::root(db)
-                .layer(TraceLayer::new_for_http()) // TODO: request時のログが出てないかも
+                .layer(logger::create_trace_layer())
                 .into_make_service(),
         )
         .await?;
