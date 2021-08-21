@@ -1,5 +1,4 @@
 use anyhow::Result;
-use axum::prelude::*;
 use std::net::SocketAddr;
 
 mod db;
