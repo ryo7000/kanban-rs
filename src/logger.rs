@@ -7,14 +7,8 @@ use tracing::Level;
 use tracing_subscriber::prelude::*;
 
 pub fn init() -> Result<Option<tracing_appender::non_blocking::WorkerGuard>> {
-    // pull log level from env
-    let log_level = env::var("LOG_LEVEL").unwrap_or_else(|_| "INFO".into());
-    let log_level = log_level
-        .parse::<tracing::Level>()
-        .unwrap_or(tracing::Level::INFO);
-
-    let filter = tracing_subscriber::EnvFilter::from_default_env().add_directive(log_level.into());
-    let stdout_layer = tracing_subscriber::fmt::layer().with_writer(std::io::stdout);
+    let filter = tracing_subscriber::EnvFilter::from_env("LOG_LEVEL");
+    let stdout_layer = tracing_subscriber::fmt::layer();
 
     let builder = tracing_subscriber::registry::Registry::default()
         .with(filter)
